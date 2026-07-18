@@ -1,0 +1,33 @@
+#containerprincipal{
+    align-items: center;
+    justify-content: center;
+    margin-left: 200px;
+    margin-right: 200px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#containerprincipal h1 {
+    color: aqua;
+    background-color: #1c1c1c;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px;
+}
+
+#containerconteudo{
+    background: firebrick;
+    border-radius: 10px;
+    padding: 10px;
+    color: beige;
+}
+
+#containerconteudo h2{
+    text-align: center;
+}
+#containerconteudo p{
+    text-align: justify;
+}
+
+#containerconteudo #data{
+    text-align: right;
+}
