@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Pessoal</title>
+    <style>
+        body{
+            padding: 0px;
+            margin: 0px;
+        }
+
+        #Container{
+            width: 100%;
+            height: 100vh;
+            background: #1C1C1C;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #divImg{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #divItems{
+            display: inline-block;
+            text-align: justify;
+            width: 80%;
+            padding: 10px;
+        }
+
+        #card{
+            background: #FFF;
+            width: 30%;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        #foto{
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+        }
+
+        button{
+            background: orange;
+            width: 80%;
+            color: black;
+            border-radius: 10px;
+            border: none;
+            padding: 5px;
+            box-shadow: 1px 1px;
+        }
+
+        button:hover{
+            opacity: 0.9;
+            
+        }
+
+        a{
+            text-decoration: none;
+            color: #1c1c1c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="Container">
+        <div id="card">
+            <div id="divImg">
+                <img src="4792929.png" alt="Foto" id="foto">
+            </div>
+            <div id="divItems">
+                <p><strong>Nome:</strong> Eduardo Luan Pilonetto</p>
+                <p><strong>Descrição:</strong> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966</p>
+                <p><strong>Hobbies:</strong></p>
+                <ul>
+                    <li>Academia</li>
+                    <li>Jogos</li>
+                    <li>Criptomoedas</li>
+                </ul>
+            </div>
+            <button><a href="https://google.com" target="_blank">Ver Mais</a></button>
+        </div>
+    </div>
+</body>
+</html>
