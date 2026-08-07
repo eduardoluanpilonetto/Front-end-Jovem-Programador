@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styleLogin.css">
+</head>
+<body>
+    <main>
+        <div id="Card">
+            <h1>Sign in</h1>
+            <input class="data" type="text" placeholder="Login" id="Login" required>
+            <input class="data" type="password" placeholder="Password" id="Password" required>
+            <input onclick="validaFormulario();" id="signin" type="submit" value="Login">
+        </div>
+    </main>
+</body>
+<script>
+    const validaFormulario = () => {
+        const login = document.getElementById("Login").value;
+        const senha = document.getElementById("Password").value;
+
+        if(login.length < 5){
+            alert("FalhaLogin");
+        }else{
+            alert(`Login: ${login} senha: ${senha}`);
+        }
+    }
+</script>
+</html>
