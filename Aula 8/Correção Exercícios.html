@@ -281,7 +281,7 @@
     <div class="demo">
       <div class="label">demonstração (sem arquivo real anexado)</div>
       <audio controls>
-        <source src="musica.mp3" type="audio/mpeg">
+        <source src="audio.mp3" type="audio/mpeg">
         Seu navegador não suporta a tag de áudio.
       </audio>
     </div>
@@ -298,7 +298,7 @@
     <div class="demo">
       <div class="label">demonstração (sem arquivo real anexado)</div>
       <video controls width="500">
-        <source src="video.mp4" type="video/mp4">
+        <source src="meuvideo.mp4" type="video/mp4">
         Seu navegador não suporta a tag de vídeo.
       </video>
     </div>
@@ -418,10 +418,10 @@ function copiar() {
         <h3>Mídia</h3>
         <p style="color:var(--ink-dim);font-size:.9rem;margin-top:-6px;">Áudio e vídeo de exemplo (arquivos não anexados)</p>
         <audio controls style="margin-bottom:10px;">
-          <source src="musica.mp3" type="audio/mpeg">
+          <source src="audio.mp3" type="audio/mpeg">
         </audio><br>
         <video controls width="400">
-          <source src="video.mp4" type="video/mp4">
+          <source src="meuvideo.mp4" type="video/mp4">
         </video>
       </section>
 
@@ -556,7 +556,7 @@ function copiar() {
     status.textContent = "Solicitando permissão...";
     navigator.geolocation.getCurrentPosition(
       function (posicao) {
-        status.textContent = `Latitude: ${posicao.coords.latitude.toFixed(4)} | Longitude: ${posicao.coords.longitude.toFixed(4)}`;
+        status.textContent = `Latitude: ${posicao.coords.latitude.toFixed(5)} | Longitude: ${posicao.coords.longitude.toFixed(5)}`;
       },
       function (erro) {
         status.textContent = "Não foi possível obter a localização (permissão negada ou indisponível).";
