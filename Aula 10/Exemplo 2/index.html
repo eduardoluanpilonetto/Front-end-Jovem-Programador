@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contador Vue.js</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.21/vue.global.prod.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f5f7;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #1d1d1f;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 90vw;
+      width: 360px;
+    }
+    h1 {
+      font-size: 1.2rem;
+      margin: 0 0 8px;
+      opacity: 0.7;
+    }
+    .numero {
+      font-size: 4rem;
+      font-weight: 700;
+      color: #42b883;
+      margin: 16px 0;
+    }
+    .mensagem {
+      background: rgba(66, 184, 131, 0.15);
+      color: #369870;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .botoes {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s ease, opacity 0.2s ease;
+    }
+    button:active { transform: scale(0.96); }
+    .btn-incrementar {
+      background: #42b883;
+      color: white;
+    }
+    button:active { transform: scale(0.96); }
+    .btn-prof {
+      background: blue;
+      color: white;
+    }
+    .btn-incrementar:hover { background: #369870; }
+    .btn-zerar {
+      background: #e74c3c;
+      color: white;
+    }
+    .btn-zerar:hover { background: #c0392b; }
+  </style>
+</head>
+<body>
+
+<div id="app" class="card">
+  <h1>Contador</h1>
+  <div class="numero">{{ contador }}</div>
+
+  <div class="mensagem" v-if="contador > 5">
+    🎉 Passou de 5!
+  </div>
+  <div class="mensagem" v-if="verprofessor">
+    O melhor professor do mundo é o {{nomeprofessor}}
+  </div>
+  <div class="botoes">
+    <button class="btn-incrementar" @click="incrementar">Incrementar</button>
+    <button class="btn-zerar" @click="zerar">Zerar</button>
+    <button class="btn-prof" @click="mostrar">Mostrar</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
