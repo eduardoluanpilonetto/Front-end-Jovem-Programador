@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Correção - Aula 1 Vue.js</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f4f8;
+    color: #2c3e50;
+    margin: 0;
+    padding: 40px 20px;
+    line-height: 1.6;
+  }
+  h1 {
+    text-align: center;
+    color: #35495e;
+    margin-bottom: 8px;
+  }
+  .subtitulo {
+    text-align: center;
+    color: #666;
+    margin-bottom: 40px;
+  }
+  .exercicio {
+    background: #fff;
+    max-width: 760px;
+    margin: 0 auto 30px auto;
+    padding: 24px 28px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-left: 5px solid #42b883;
+  }
+  .exercicio h2 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: #35495e;
+  }
+  .exercicio h2 span {
+    background: #42b883;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-right: 8px;
+  }
+  .resultado {
+    background: #f9f9fb;
+    border: 1px dashed #ccc;
+    border-radius: 6px;
+    padding: 16px;
+    margin-top: 10px;
+  }
+  img { max-width: 200px; border-radius: 6px; display: block; margin-top: 6px; }
+  a { color: #42b883; font-weight: bold; }
+  button {
+    background: #42b883;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-right: 8px;
+  }
+  button:hover { background: #369870; }
+  .contador-valor {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #35495e;
+    margin: 10px 0;
+  }
+  .explicacao {
+    font-size: 0.9rem;
+    color: #555;
+    background: #eef7f1;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Correção - Aula 1: Primeiros Passos com Vue.js</h1>
+<p class="subtitulo">Resolução dos 10 exercícios da apostila</p>
+
+<div id="app">
+
+  <!-- Exercício 1 -->
+  <div class="exercicio">
+    <h2><span>1</span>Primeiro app</h2>
+    <div class="resultado">
+      {{ mensagemInicial }}
+    </div>
+  </div>
+
+  <!-- Exercício 2 -->
+  <div class="exercicio">
+    <h2><span>2</span>Dados pessoais</h2>
+    <div class="resultado">
+      <p>Nome: {{ nome }}</p>
+      <p>Idade: {{ idade }}</p>
+      <p>Cidade: {{ cidade }}</p>
+    </div>
+  </div>
+
+  <!-- Exercício 3 -->
+  <div class="exercicio">
+    <h2><span>3</span>Frase montada</h2>
+    <div class="resultado">
+      <p>{{ nome + " tem " + idade + " anos e mora em " + cidade }}</p>
+    </div>
+  </div>
+
+  <!-- Exercício 4 -->
+  <div class="exercicio">
+    <h2><span>4</span>Imagem dinâmica</h2>
+    <div class="resultado">
+      <img :src="urlImagem" alt="Imagem de exemplo">
+    </div>
+  </div>
+
+  <!-- Exercício 5 -->
+  <div class="exercicio">
+    <h2><span>5</span>Link dinâmico</h2>
+    <div class="resultado">
+      <a :href="linkSite" target="_blank">Visite o site</a>
+    </div>
+  </div>
+
+  <!-- Exercício 6 -->
+  <div class="exercicio">
+    <h2><span>6</span>Login simples</h2>
+    <div class="resultado">
+      <p v-if="logado">Bem-vindo(a) de volta!</p>
+      <p v-else>Faça login para continuar</p>
+      <button @click="logado = !logado">Alternar login (teste)</button>
+    </div>
+  </div>
+
+  <!-- Exercício 7 -->
+  <div class="exercicio">
+    <h2><span>7</span>Carregando...</h2>
+    <div class="resultado">
+      <p v-show="carregando">Carregando...</p>
+      <button @click="carregando = !carregando">Alternar carregando (teste)</button>
+      <p class="explicacao">
+        Usamos <strong>v-show</strong> aqui porque o estado "carregando" tende a
+        mudar com bastante frequência (aparece e desaparece toda hora enquanto
+        a página busca dados). Como o v-show só troca o CSS (display:none),
+        alternar é mais barato do que o v-if, que precisaria criar e destruir
+        o elemento no HTML a cada mudança.
+      </p>
+    </div>
+  </div>
+
+  <!-- Exercício 8, 9 e 10 -->
+  <div class="exercicio">
+    <h2><span>8-10</span>Contador de cliques</h2>
+    <div class="resultado">
+      <p class="contador-valor">Contador: {{ contador }}</p>
+      <button @click="incrementar">Incrementar</button>
+      <button @click="zerar">Zerar</button>
+      <p v-if="contador > 5">🎉 Você passou de 5 cliques!</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
