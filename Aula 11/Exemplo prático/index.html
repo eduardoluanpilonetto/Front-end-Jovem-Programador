@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue.js — Aula 2 — Lista de Tarefas (To-Do List)</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #0f1029;
+      color: #e8e8f0;
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px;
+      margin: 0;
+    }
+    #app {
+      background: #171a3b;
+      border-radius: 12px;
+      padding: 32px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    h1 {
+      font-size: 1.3rem;
+      margin-top: 0;
+      color: #ffffff;
+    }
+    .form-nova-tarefa {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #333767;
+      background: #0f1029;
+      color: #e8e8f0;
+      font-size: 1rem;
+    }
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      background: #3ddc97;
+      color: #0f1029;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    button:disabled {
+      background: #333767;
+      color: #888;
+      cursor: not-allowed;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #262a52;
+    }
+    li:last-child { border-bottom: none; }
+    li span {
+      flex: 1;
+    }
+    li.feita span {
+      text-decoration: line-through;
+      color: #888;
+    }
+    .btn-remover {
+      background: transparent;
+      color: #ff6b6b;
+      font-weight: normal;
+      padding: 4px 8px;
+    }
+    .restantes {
+      margin-top: 20px;
+      font-size: 0.95rem;
+      color: #3ddc97;
+      font-weight: bold;
+    }
+    .vazio {
+      color: #888;
+      font-style: italic;
+      padding: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app">
+    <h1>📋 Lista de Tarefas</h1>
+
+    <!-- Formulário: v-model liga o input ao dado 'novaTarefa' -->
+    <form class="form-nova-tarefa" @submit.prevent="adicionar">
+      <input
+        type="text"
+        v-model="novaTarefa"
+        placeholder="Digite uma nova tarefa..."
+      >
+      <button type="submit" :disabled="novaTarefa.trim() === ''">
+        Adicionar
+      </button>
+    </form>
+
+    <!-- v-for percorre o array 'tarefas' e :key usa o id (nunca o índice) -->
+    <ul>
+      <li
+        v-for="tarefa in tarefas"
+        :key="tarefa.id"
+        :class="{ feita: tarefa.feita }"
+      >
+        <input type="checkbox" v-model="tarefa.feita">
+        <span>{{ tarefa.texto }}</span>
+        <button class="btn-remover" @click="remover(tarefa.id)">✕</button>
+      </li>
+    </ul>
+
+    <p v-if="tarefas.length === 0" class="vazio">
+      Nenhuma tarefa ainda. Adicione a primeira! 👆
+    </p>
+
+    <!-- computed: só recalcula quando 'tarefas' muda -->
+    <p class="restantes">
+      {{ restantes }} tarefa(s) restante(s) de {{ tarefas.length }}
+    </p>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          novaTarefa: "",
+          tarefas: [
+            { id: 1, texto: "Estudar Vue", feita: true },
+            { id: 2, texto: "Fazer exercício", feita: false },
+            { id: 3, texto: "Revisar HTML", feita: false }
+          ]
+        };
+      },
+      computed: {
+        // computed: recalcula automaticamente só quando 'tarefas' muda
+        restantes() {
+          return this.tarefas.filter(t => !t.feita).length;
+        }
+      },
+      methods: {
+        // method: executa toda vez que é chamado (aqui, por um evento)
+        adicionar() {
+          const texto = this.novaTarefa.trim();
+          if (texto === "") return;
+
+          this.tarefas.push({
+            id: Date.now(), // gera um id único e estável para o :key
+            texto: texto,
+            feita: false
+          });
+
+          this.novaTarefa = ""; // limpa o input após adicionar
+        },
+        remover(id) {
+          this.tarefas = this.tarefas.filter(t => t.id !== id);
+        }
+      }
+    }).mount("#app");
+  </script>
+
+</body>
+</html>
