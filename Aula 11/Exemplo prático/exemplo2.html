@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue.js — Aula 2 — Lista de Tarefas (To-Do List)</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input v-model="nome" placeholder="Seu nome">
+        <p>Olá, {{ nome }}!</p>
+        <!-- checkbox: boolean -->
+        <input type="checkbox" v-model="aceito">
+        <p>Aceitou: {{ aceito }}</p>
+
+        <!-- select: string -->
+        <select v-model="corFavorita">
+            <option value="verde">Verde</option>
+            <option value="azul">Azul</option>
+        </select>
+        <p>Cor Favorita: {{ corFavorita }}</p>
+        <!-- index.html -->
+        <ul>
+        <li v-for="tarefa in tarefas" :key="tarefa">
+            {{ tarefa }}
+        </li>
+        </ul>
+        <!-- com índice -->
+        <li v-for="(tarefa, index) in tarefas" :key="tarefa">
+        {{ index + 1 }} - {{ tarefa }}
+        </li>
+
+    </div>
+</body>
+<script>
+    const { createApp } = Vue;
+
+    // app.js
+    createApp({
+    data() {
+        return { 
+            nome: "",
+            aceito: false,
+            corFavorita: "verde",
+            tarefas: ["Estudar Vue", "Fazer exercício", "Revisar HTML"]
+        };
+    }
+    }).mount("#app");
+</script>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Correção — Vue.js Aula 2</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --card2:#162032; --accent:#42b883; --accent2:#35495e;
+    --text:#e2e8f0; --muted:#94a3b8; --border:#334155; --danger:#f87171;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); padding:24px 16px 80px;
+  }
+  header.top{max-width:900px;margin:0 auto 32px;text-align:center;}
+  header.top h1{color:var(--accent);margin-bottom:4px;}
+  header.top p{color:var(--muted);margin-top:0;}
+  .badge{
+    display:inline-block;background:var(--accent2);color:#fff;font-size:12px;
+    padding:2px 10px;border-radius:12px;margin-left:8px;vertical-align:middle;
+  }
+  main{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:24px;}
+  section.exercicio{
+    background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:20px 24px;
+  }
+  section.exercicio h2{
+    margin-top:0;color:var(--accent);display:flex;align-items:center;gap:8px;font-size:19px;
+  }
+  section.exercicio .meta{color:var(--muted);font-size:13px;margin-top:-8px;margin-bottom:16px;}
+  .demo{
+    background:var(--card2);border:1px dashed var(--border);border-radius:8px;
+    padding:16px;margin-bottom:14px;
+  }
+  .demo label{display:block;margin:6px 0;font-size:14px;}
+  .demo input[type=text], .demo select{
+    background:#0f172a;border:1px solid var(--border);color:var(--text);
+    padding:6px 10px;border-radius:6px;font-size:14px;
+  }
+  .demo button{
+    background:var(--accent);border:none;color:#04241a;font-weight:600;
+    padding:6px 14px;border-radius:6px;cursor:pointer;margin:4px 4px 4px 0;font-size:14px;
+  }
+  .demo button:hover{filter:brightness(1.08);}
+  .demo button.secundario{background:var(--accent2);color:#fff;}
+  .demo ul{padding-left:20px;margin:8px 0;}
+  .demo li{margin:4px 0;}
+  .demo .resultado{margin-top:10px;font-weight:600;}
+  .demo .aviso{color:var(--danger);font-size:13px;}
+  .risco{text-decoration:line-through;color:var(--muted);}
+  details.codigo{margin-top:4px;}
+  details.codigo summary{
+    cursor:pointer;color:var(--accent);font-size:13px;user-select:none;margin-bottom:8px;
+  }
+  pre{
+    background:#0b1220;border:1px solid var(--border);border-radius:8px;
+    padding:14px;overflow-x:auto;font-size:13px;line-height:1.5;color:#cbd5e1;
+    margin:0;
+  }
+  .comentario{
+    background:#132a20;border-left:3px solid var(--accent);
+    padding:10px 14px;border-radius:6px;font-size:14px;color:#d1fae5;margin-top:12px;
+  }
+  .comentario b{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Vue.js — Aula 2 <span class="badge">Correção dos exercícios</span></h1>
+  <p>Reatividade, Formulários e Listas — v-on · v-model · v-for e :key · methods x computed</p>
+</header>
+
+<main>
+
+  <!-- EXERCÍCIO 1 -->
+  <section class="exercicio" id="ex1">
+    <h2>Exercício 1 — Contador</h2>
+    <div class="meta">Fácil · @click, methods</div>
+    <div class="demo">
+      <p>Valor: <b>{{ contador }}</b></p>
+      <button @click="incrementar">+1</button>
+      <button @click="decrementar">−1</button>
+      <button class="secundario" @click="zerar">Zerar</button>
+    </div>
+    <details class="codigo">
+      <summary>Ver código</summary>
+      <pre>data() {
+  return { contador: 0 };
+},
+methods: {
+  incrementar() { this.contador++; },
+  decrementar() { this.contador--; },
+  zerar() { this.contador = 0; }
+}</pre>
+    </details>
+  </section>
+
+  <!-- EXERCÍCIO 2 -->
+  <section class="exercicio" id="ex2">
+    <h2>Exercício 2 — Olá, visitante</h2>
+    <div class="meta">Fácil · v-model, v-if</div>
+    <div class="demo">
+      <label>Nome: <input type="text" v-model="nome" placeholder="Digite seu nome"></label>
+      <p v-if="nome">Olá, {{ nome }}!</p>
+    </div>
+    <details class="codigo">
+      <summary>Ver código</summary>
+      <pre>data() {
+  return { nome: "" };
+}
+
+&lt;input v-model="nome" placeholder="Digite seu nome"&gt;
+&lt;p v-if="nome"&gt;Olá, {{ nome }}!&lt;/p&gt;</pre>
+    </details>
+    <div class="comentario"><b>Atenção:</b> <code>v-if="nome"</code> funciona porque string vazia é "falsy" em JS — não precisa escrever <code>nome !== ''</code>.</div>
+  </section>
+
+  <!-- EXERCÍCIO 3 -->
+  <section class="exercicio" id="ex3">
+    <h2>Exercício 3 — Nome completo</h2>
+    <div class="meta">Fácil · v-model, computed</div>
+    <div class="demo">
+      <label>Nome: <input type="text" v-model="nome3"></label>
+      <label>Sobrenome: <input type="text" v-model="sobrenome3"></label>
+      <p class="resultado">Nome completo: {{ nomeCompleto }}</p>
+    </div>
+    <details class="codigo">
+      <summary>Ver código</summary>
+      <pre>data() {
+  return { nome3: "", sobrenome3: "" };
+},
+computed: {
+  nomeCompleto() {
+    return (this.nome3 + " " + this.sobrenome3).trim();
+  }
+}</pre>
+    </details>
+  </section>
+
+  <!-- EXERCÍCIO 4 -->
+  <section class="exercicio" id="ex4">
+    <h2>Exercício 4 — Minhas preferências</h2>
+    <div class="meta">Fácil · v-model em checkbox e select</div>
+    <div class="demo">
+      <label><input type="checkbox" v-model="aceito"> Quero receber novidades</label>
+      <p>Aceitou: {{ aceito }}</p>
+      <label>Cor favorita:
+        <select v-model="corFavorita">
+          <option value="verde">Verde</option>
+          <option value="azul">Azul</option>
+          <option value="amarelo">Amarelo</option>
+        </select>
+      </label>
+      <p>Sua cor favorita é: {{ corFavorita }}</p>
+    </div>
+    <details class="codigo">
+      <summary>Ver código</summary>
+      <pre>data() {
+  return {
+    aceito: false,
+    corFavorita: "azul"  // já vem marcada por causa do valor inicial
+  };
+}</pre>
+    </details>
+    <div class="comentario"><b>Truque:</b> a cor já vem marcada ao abrir a página só porque o valor inicial de <code>corFavorita</code> é <code>"azul"</code> — igual a um dos <code>value</code> do select.</div>
+  </section>
+
+  <!-- EXERCÍCIO 5 -->
+  <section class="exercicio" id="ex5">
+    <h2>Exercício 5 — Lista de frutas</h2>
+    <div class="meta">Médio · v-for, índice</div>
+    <div class="demo">
+      <ul>
+        <li v-for="(fruta, index) in frutas" :key="fruta">{{ index + 1 }} - {{ fruta }}</li>
+      </ul>
+    </div>
+    <details class="codigo">
+      <summary>Ver código</summary>
+      <pre>data() {
+  return { frutas: ["Maçã", "Banana", "Uva", "Manga", "Pera"] };
+}
+
+&lt;li v-for="(fruta, index) in frutas" :key="fruta"&gt;
+  {{ index + 1 }} - {{ fruta }}
+&lt;/li&gt;</pre>
+    </details>
+  </section>
+
+  <!-- EXERCÍCIO 6 -->
+  <section class="exercicio" id="ex6">
+    <h2>Exercício 6 — Adicionando frutas</h2>
+    <div class="meta">Médio · v-model, @click, push</div>
+    <div class="demo">
+      <label>Nova fruta: <input type="text" v-model="novaFruta" placeholder="Ex: Abacaxi"></label>
+      <button @click="adicionarFruta">Adicionar</button>
+      <p v-if="avisoFruta" class="aviso">Digite uma fruta antes de adicionar!</p>
+      <ul>
+        <li v-for="(fruta, index) in frutas6" :key="fruta">{{ index + 1 }} - {{ fruta }}</li>
+      </ul>
+    </div>
+    <details class="codigo">
+      <summary>Ver código</summary>
+      <pre>data() {
+  return { novaFruta: "", frutas6: ["Maçã", "Banana"], avisoFruta: false };
+},
+methods: {
+  adicionarFruta() {
+    if (this.novaFruta.trim() === "") {
+      this.avisoFruta = true;
+      return;
+    }
+    this.avisoFruta = false;
+    this.frutas6.push(this.novaFruta.trim());
+    this.novaFruta = "";
+  }
+}</pre>
+    </details>
+  </section>
+
+  <!-- EXERCÍCIO 7 -->
+  <section class="exercicio" id="ex7">
+    <h2>Exercício 7 — Lista de alunos</h2>
+    <div class="meta">Médio · v-for com objetos, :key</div>
+    <div class="demo">
+      <ul>
+        <li v-for="aluno in alunos" :key="aluno.id">{{ aluno.nome }} — nota {{ aluno.nota }}</li>
+      </ul>
+      <p class="resultado">Média da turma: {{ mediaNotas }}</p>
+    </div>
+    <details class="codigo">
+      <summary>Ver código</summary>
+      <pre>data() {
+  return {
+    alunos: [
+      { id: 1, nome: "Ana",    nota: 8 },
+      { id: 2, nome: "Bruno",  nota: 6 },
+      { id: 3, nome: "Carla",  nota: 9 },
+      { id: 4, nome: "Diego",  nota: 5 }
+    ]
+  };
+},
+computed: {
+  mediaNotas() {
+    const soma = this.alunos.reduce((acc, a) => acc + a.nota, 0);
+    return (soma / this.alunos.length).toFixed(1);
+  }
+}</pre>
+    </details>
+  </section>
+
+  <!-- EXERCÍCIO 8 -->
+  <section class="exercicio" id="ex8">
+    <h2>Exercício 8 — Quem passou?</h2>
+    <div class="meta">Médio · computed</div>
+    <div class="demo">
+      <ul>
+        <li v-for="aluno in alunos8" :key="aluno.id">{{ aluno.nome }} — nota {{ aluno.nota }}</li>
+      </ul>
+      <p class="resultado">{{ aprovados }} de {{ alunos8.length }} alunos aprovados</p>
+    </div>
+    <details class="codigo">
+      <summary>Ver código</summary>
+      <pre>computed: {
+  aprovados() {
+    return this.alunos8.filter(a => a.nota >= 7).length;
+  }
+}</pre>
+    </details>
+    <div class="comentario"><b>Reatividade:</b> se você mudar uma nota no <code>data()</code>, o <code>aprovados</code> recalcula sozinho — não precisa chamar nada.</div>
+  </section>
+
+  <!-- EXERCÍCIO 9 -->
+  <section class="exercicio" id="ex9">
+    <h2>Exercício 9 — Pense e responda</h2>
+    <div class="meta">Médio · methods x computed, :key</div>
+    <div class="demo" style="background:var(--card2);">
+      <p><b>a) Qual a diferença entre methods e computed?</b><br>
+      <code>methods</code> é uma função que roda toda vez que é chamada (por exemplo, a cada clique). <code>computed</code> é um valor que o Vue calcula e guarda em cache, só recalculando quando algum dado usado dentro dele muda.</p>
+
+      <p><b>b) Para mostrar o total de itens de uma lista, você usaria qual dos dois? Por quê?</b><br>
+      <code>computed</code>. Porque é um valor derivado dos dados (não uma ação), e o Vue evita recalcular à toa — só atualiza quando a lista realmente mudar.</p>
+
+      <p><b>c) Por que é melhor usar um id no :key em vez do índice?</b><br>
+      Porque o índice muda quando um item é removido ou reordenado, fazendo o Vue confundir qual elemento é qual (pode misturar dados entre linhas). O id é único e fixo para cada item, então o Vue sempre sabe exatamente qual elemento atualizar.</p>
+    </div>
+  </section>
+
+  <!-- EXERCÍCIO 10 -->
+  <section class="exercicio" id="ex10">
+    <h2>Exercício 10 — Lista de Tarefas (To-Do List)</h2>
+    <div class="meta">Desafio · tudo da aula</div>
+    <div class="demo">
+      <label>Nova tarefa: <input type="text" v-model="novaTarefa" placeholder="Ex: Estudar Vue" @keyup.enter="adicionar"></label>
+      <button @click="adicionar">Adicionar</button>
+      <ul>
+        <li v-for="tarefa in tarefas" :key="tarefa.id">
+          <label>
+            <input type="checkbox" v-model="tarefa.feita">
+            <span :class="{ risco: tarefa.feita }">{{ tarefa.texto }}</span>
+          </label>
+        </li>
+      </ul>
+      <p class="resultado">{{ restantes }} tarefa(s) restante(s)</p>
+    </div>
+    <details class="codigo">
+      <summary>Ver código</summary>
+      <pre>data() {
+  return { novaTarefa: "", tarefas: [] };
+},
+methods: {
+  adicionar() {
+    if (this.novaTarefa.trim() === "") return;
+    this.tarefas.push({
+      id: Date.now(),
+      texto: this.novaTarefa.trim(),
+      feita: false
+    });
+    this.novaTarefa = "";
+  }
+},
+computed: {
+  restantes() {
+    return this.tarefas.filter(t => !t.feita).length;
+  }
+}</pre>
+    </details>
+  </section>
+
+</main>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() { return { contador: 0 }; },
+  methods: {
+    incrementar() { this.contador++; },
+    decrementar() { this.contador--; },
+    zerar() { this.contador = 0; }
+  }
+}).mount("#ex1");
+
+createApp({
+  data() { return { nome: "" }; }
+}).mount("#ex2");
+
+createApp({
+  data() { return { nome3: "", sobrenome3: "" }; },
+  computed: {
+    nomeCompleto() { return (this.nome3 + " " + this.sobrenome3).trim(); }
+  }
+}).mount("#ex3");
+
+createApp({
+  data() { return { aceito: false, corFavorita: "azul" }; }
+}).mount("#ex4");
+
+createApp({
+  data() { return { frutas: ["Maçã", "Banana", "Uva", "Manga", "Pera"] }; }
+}).mount("#ex5");
+
+createApp({
+  data() { return { novaFruta: "", frutas6: ["Maçã", "Banana"], avisoFruta: false }; },
+  methods: {
+    adicionarFruta() {
+      if (this.novaFruta.trim() === "") { this.avisoFruta = true; return; }
+      this.avisoFruta = false;
+      this.frutas6.push(this.novaFruta.trim());
+      this.novaFruta = "";
+    }
+  }
+}).mount("#ex6");
+
+createApp({
+  data() {
+    return {
+      alunos: [
+        { id: 1, nome: "Ana",   nota: 8 },
+        { id: 2, nome: "Bruno", nota: 6 },
+        { id: 3, nome: "Carla", nota: 9 },
+        { id: 4, nome: "Diego", nota: 5 }
+      ]
+    };
+  },
+  computed: {
+    mediaNotas() {
+      const soma = this.alunos.reduce((acc, a) => acc + a.nota, 0);
+      return (soma / this.alunos.length).toFixed(1);
+    }
+  }
+}).mount("#ex7");
+
+createApp({
+  data() {
+    return {
+      alunos8: [
+        { id: 1, nome: "Ana",   nota: 8 },
+        { id: 2, nome: "Bruno", nota: 6 },
+        { id: 3, nome: "Carla", nota: 9 },
+        { id: 4, nome: "Diego", nota: 5 }
+      ]
+    };
+  },
+  computed: {
+    aprovados() { return this.alunos8.filter(a => a.nota >= 7).length; }
+  }
+}).mount("#ex8");
+
+createApp({
+  data() { return { novaTarefa: "", tarefas: [] }; },
+  methods: {
+    adicionar() {
+      if (this.novaTarefa.trim() === "") return;
+      this.tarefas.push({ id: Date.now(), texto: this.novaTarefa.trim(), feita: false });
+      this.novaTarefa = "";
+    }
+  },
+  computed: {
+    restantes() { return this.tarefas.filter(t => !t.feita).length; }
+  }
+}).mount("#ex10");
+</script>
+
+</body>
+</html>
