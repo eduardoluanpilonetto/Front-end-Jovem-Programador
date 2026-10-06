@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aula 3 — Componentização · Correção dos exercícios</title>
+  <style>
+    :root {
+      --tinta: #263746;
+      --papel: #f6f8f9;
+      --branco: #ffffff;
+      --linha: #d3dce2;
+      --verde: #2a8f65;
+      --verde-claro: #e2f3ea;
+      --vermelho: #b3261e;
+      --vermelho-claro: #fbe9e7;
+      --codigo-fundo: #1d2833;
+      --codigo-texto: #e4ecf2;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--papel);
+      color: var(--tinta);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+    }
+    main { max-width: 860px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+    header h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 .5rem; }
+    header p { margin: 0 0 1rem; max-width: 62ch; }
+
+    .regra {
+      background: var(--verde-claro);
+      border-left: 4px solid var(--verde);
+      padding: .75rem 1rem;
+      margin: 1.25rem 0;
+      max-width: 70ch;
+    }
+    .regra p { margin: .25rem 0; }
+
+    nav { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1.25rem 0 0; }
+    nav a {
+      display: inline-block;
+      min-width: 2.4rem;
+      text-align: center;
+      padding: .3rem .6rem;
+      border: 1px solid var(--linha);
+      background: var(--branco);
+      color: var(--tinta);
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav a:hover, nav a:focus-visible { border-color: var(--verde); outline: 2px solid var(--verde); outline-offset: 1px; }
+
+    section.ex { margin-top: 3rem; padding-top: 1.5rem; border-top: 2px solid var(--linha); }
+    section.ex h2 { font-size: 1.35rem; margin: 0 0 .4rem; }
+    .enunciado { margin: 0 0 1rem; max-width: 70ch; color: #3d5163; }
+
+    .demo {
+      background: var(--branco);
+      border: 1px solid var(--linha);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .demo h2, .demo h3 { margin: .25rem 0; }
+
+    details { margin: .75rem 0; }
+    summary { cursor: pointer; font-weight: 600; padding: .25rem 0; }
+    .rotulo-codigo { font-size: .85rem; font-weight: 600; margin: .75rem 0 .25rem; color: #4a6073; }
+    pre {
+      margin: 0;
+      background: var(--codigo-fundo);
+      color: var(--codigo-texto);
+      padding: .9rem 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: .85rem;
+      line-height: 1.5;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .notas { max-width: 70ch; margin: .5rem 0 0; }
+    .notas ul { margin: .25rem 0; padding-left: 1.25rem; }
+
+    table { border-collapse: collapse; width: 100%; background: var(--branco); margin: .5rem 0; }
+    th, td { border: 1px solid var(--linha); padding: .5rem .7rem; text-align: left; vertical-align: top; }
+    th { background: #eef2f5; }
+
+    /* ---- estilos usados pelas demonstrações ---- */
+    .grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .75rem; }
+    .cartao { border: 1px solid var(--linha); border-radius: 8px; padding: .6rem .9rem; background: var(--papel); }
+    .cartao h3 { font-size: 1.05rem; }
+    .cartao p { margin: .15rem 0; }
+    .preco { font-weight: 700; }
+    .ok { color: var(--verde); font-weight: 600; }
+    .esgotado { color: var(--vermelho); font-weight: 600; }
+
+    .avisos { list-style: none; padding: 0; margin: .75rem 0 0; }
+    .avisos li {
+      background: var(--vermelho-claro);
+      border-left: 4px solid var(--vermelho);
+      padding: .4rem .7rem;
+      margin-bottom: .4rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .85rem;
+    }
+
+    .lista { list-style: none; padding: 0; margin: 0 0 .5rem; }
+    .lista li { padding: .45rem .6rem; border-bottom: 1px solid var(--linha); }
+    .lista li.clicavel { cursor: pointer; }
+    .lista li.clicavel:hover { background: var(--papel); }
+    .feita { text-decoration: line-through; color: #7b8b98; }
+
+    .botao {
+      font: inherit;
+      padding: .4rem .9rem;
+      border: 1px solid var(--verde);
+      background: var(--verde);
+      color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .botao:hover:not(:disabled) { filter: brightness(1.1); }
+    .botao:disabled { background: #c5cfd6; border-color: #c5cfd6; cursor: not-allowed; }
+    .botao:focus-visible, input:focus-visible, .remover:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
+
+    .placar { font-size: 1.2rem; margin: 0 0 .75rem; }
+    .acoes { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+    .contador { display: inline-flex; align-items: center; gap: .75rem; }
+    .contador .valor { min-width: 2ch; text-align: center; font-size: 1.4rem; font-weight: 700; }
+
+    .nova { display: flex; gap: .5rem; margin-bottom: .75rem; }
+    .nova input { flex: 1; font: inherit; padding: .4rem .6rem; border: 1px solid var(--linha); border-radius: 6px; }
+
+    .item { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+    .item label { cursor: pointer; flex: 1; }
+    .remover { font: inherit; background: none; border: 1px solid var(--vermelho); color: var(--vermelho); border-radius: 6px; padding: .2rem .6rem; cursor: pointer; }
+    .remover:hover { background: var(--vermelho-claro); }
+    .resumo { font-weight: 600; margin: .5rem 0 0; }
+    .vazio { color: #6a7c8a; margin: .5rem 0; }
+  </style>
+</head>
+<body>
+<main>
+
+  <header>
+    <h1>Aula 3 — Componentização<br>Correção dos exercícios</h1>
+    <p>Cada exercício abaixo tem a demonstração funcionando, o HTML e o JavaScript da solução. O código exibido é exatamente o que está rodando na página.</p>
+    <div class="regra">
+      <p><strong>Fluxo de dados:</strong> dados descem por <code>props</code>, eventos sobem por <code>emits</code>.</p>
+      <p><strong>Regra de ouro:</strong> o filho nunca altera uma prop. Quem muda o dado é o pai.</p>
+    </div>
+    <p>Aqui todos os exercícios estão em uma única página, por isso cada um monta o seu app em um <code>#app1</code>, <code>#app2</code>… Na entrega dos alunos, cada exercício tem seu próprio <code>index.html</code> e <code>app.js</code>, com <code>#app</code>.</p>
+    <nav aria-label="Exercícios">
+      <a href="#ex1">1</a><a href="#ex2">2</a><a href="#ex3">3</a><a href="#ex4">4</a><a href="#ex5">5</a>
+      <a href="#ex6">6</a><a href="#ex7">7</a><a href="#ex8">8</a><a href="#ex9">9</a><a href="#ex10">10</a>
+    </nav>
+  </header>
+
+  <!-- ============ EXERCÍCIO 1 ============ -->
+  <section class="ex" id="ex1">
+    <h2>Exercício 1 — Meu primeiro componente</h2>
+    <p class="enunciado">Componente <code>saudacao-usuario</code> com um <code>&lt;h2&gt;</code> "Olá, bem-vindo ao curso!", usado três vezes.</p>
+    <div class="demo">
+      <div id="app1">
+        <saudacao-usuario></saudacao-usuario>
+        <saudacao-usuario></saudacao-usuario>
+        <saudacao-usuario></saudacao-usuario>
+      </div>
+    </div>
+    <details open><summary>Código</summary><div class="codigo"></div></details>
+    <div class="notas"><ul>
+      <li>O componente é registrado com <code>app.component()</code> <strong>antes</strong> de <code>app.mount()</code>.</li>
+      <li>Cada uso da tag cria uma instância independente do componente.</li>
+    </ul></div>
+    <script type="text/plain" data-ex="1">
+      const app = Vue.createApp({});
+
+      app.component("saudacao-usuario", {
+        template: `<h2>Olá, bem-vindo ao curso!</h2>`
+      });
+
+      app.mount("#app1");
+    </script>
+  </section>
+
+  <!-- ============ EXERCÍCIO 2 ============ -->
+  <section class="ex" id="ex2">
+    <h2>Exercício 2 — Saudação personalizada</h2>
+    <p class="enunciado">O componente recebe a prop <code>nome</code> e exibe "Olá, {nome}!". Três usos, três nomes.</p>
+    <div class="demo">
+      <div id="app2">
+        <saudacao-usuario nome="Ana"></saudacao-usuario>
+        <saudacao-usuario nome="Bruno"></saudacao-usuario>
+        <saudacao-usuario nome="Carla"></saudacao-usuario>
+      </div>
+    </div>
+    <details open><summary>Código</summary><div class="codigo"></div></details>
+    <div class="notas"><ul>
+      <li>Sem dois-pontos (<code>nome="Ana"</code>), o valor chega como texto fixo.</li>
+      <li>Para usar uma variável ou número, seria <code>:nome="variavel"</code>.</li>
+    </ul></div>
+    <script type="text/plain" data-ex="2">
+      const app = Vue.createApp({});
+
+      app.component("saudacao-usuario", {
+        props: ["nome"],
+        template: `<h2>Olá, {{ nome }}!</h2>`
+      });
+
+      app.mount("#app2");
+    </script>
+  </section>
+
+  <!-- ============ EXERCÍCIO 3 ============ -->
+  <section class="ex" id="ex3">
+    <h2>Exercício 3 — Cartão de produto</h2>
+    <p class="enunciado">Componente <code>cartao-produto</code> com as props <code>nome</code>, <code>preco</code> e <code>emEstoque</code>, mostrando o preço como "R$ 0,00" e "Disponível" ou "Esgotado".</p>
+    <div class="demo">
+      <div id="app3">
+        <div class="grade">
+          <cartao-produto nome="Teclado mecânico" :preco="249.9" :em-estoque="true"></cartao-produto>
+          <cartao-produto nome="Mouse sem fio" :preco="89.5" :em-estoque="true"></cartao-produto>
+          <cartao-produto nome="Monitor 24 pol." :preco="899" :em-estoque="false"></cartao-produto>
+        </div>
+      </div>
+    </div>
+    <details open><summary>Código</summary><div class="codigo"></div></details>
+    <div class="notas"><ul>
+      <li><code>:preco="249.9"</code> e <code>:em-estoque="true"</code> usam dois-pontos: são expressões JavaScript, então chegam como número e booleano.</li>
+      <li>No <strong>HTML</strong> a prop <code>emEstoque</code> é escrita em kebab-case: <code>em-estoque</code>.</li>
+      <li>O preço é formatado em uma <code>computed</code> com <code>toLocaleString("pt-BR", …)</code>.</li>
+    </ul></div>
+    <script type="text/plain" data-ex="3">
+      const app = Vue.createApp({});
+
+      app.component("cartao-produto", {
+        props: ["nome", "preco", "emEstoque"],
+        computed: {
+          precoFormatado() {
+            return this.preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+          }
+        },
+        template: `
+          <div class="cartao">
+            <h3>{{ nome }}</h3>
+            <p class="preco">{{ precoFormatado }}</p>
+            <p :class="emEstoque ? 'ok' : 'esgotado'">{{ emEstoque ? "Disponível" : "Esgotado" }}</p>
+          </div>`
+      });
+
+      app.mount("#app3");
+    </script>
+  </section>
+
+  <!-- ============ EXERCÍCIO 4 ============ -->
+  <section class="ex" id="ex4">
+    <h2>Exercício 4 — Validando props</h2>
+    <p class="enunciado">Mesmas props do exercício 3, agora com validação. Dois usos propositalmente errados: um sem <code>nome</code> e outro com preço inválido. Os avisos do Vue aparecem no console e também na lista abaixo.</p>
+    <div class="demo">
+      <div id="app4">
+        <div class="grade">
+          <cartao-produto nome="Teclado mecânico" :preco="249.9"></cartao-produto>
+          <cartao-produto :preco="50"></cartao-produto>
+          <cartao-produto nome="Mouse sem fio" preco="barato"></cartao-produto>
+        </div>
+        <ul class="avisos">
+          <li v-for="(aviso, i) in avisos" :key="i">{{ aviso }}</li>
+        </ul>
+      </div>
+    </div>
+    <details open><summary>Código</summary><div class="codigo"></div></details>
+    <div class="notas">
+      <p><strong>O que cada aviso significa:</strong></p>
+      <table>
+        <tr><th>Aviso</th><th>Explicação</th></tr>
+        <tr>
+          <td><code>Missing required prop: "nome"</code></td>
+          <td>A prop <code>nome</code> tem <code>required: true</code>, mas o segundo cartão foi usado sem informá-la.</td>
+        </tr>
+        <tr>
+          <td><code>Invalid prop: type check failed for prop "preco"</code></td>
+          <td>A prop espera <code>Number</code>, mas recebeu o texto <code>"barato"</code>. Atenção: mesmo <code>preco="10"</code>, sem dois-pontos, também geraria este aviso, porque chega como texto. O correto é <code>:preco="10"</code>.</td>
+        </tr>
+      </table>
+      <ul>
+        <li>Nenhuma das duas situações quebra a página: a validação só avisa, e só no build de desenvolvimento do Vue.</li>
+        <li><code>emEstoque</code> ausente não gera aviso: o valor padrão <code>true</code> é aplicado (por isso o primeiro cartão aparece como disponível).</li>
+      </ul>
+    </div>
+    <script type="text/plain" data-ex="4">
+      // Apenas para mostrar os avisos do Vue também na página
+      const avisos = Vue.reactive([]);
+
+      const app = Vue.createApp({
+        setup() {
+          return { avisos };
+        }
+      });
+
+      app.config.warnHandler = (mensagem) => {
+        console.warn("[Vue warn]: " + mensagem);
+        Promise.resolve().then(() => avisos.push(mensagem));
+      };
+
+      app.component("cartao-produto", {
+        props: {
+          nome: { type: String, required: true },
+          preco: { type: Number, default: 0 },
+          emEstoque: { type: Boolean, default: true }
+        },
+        computed: {
+          precoFormatado() {
+            return this.preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+          }
+        },
+        template: `
+          <div class="cartao">
+            <h3>{{ nome }}</h3>
+            <p class="preco">{{ precoFormatado }}</p>
+            <p :class="emEstoque ? 'ok' : 'esgotado'">{{ emEstoque ? "Disponível" : "Esgotado" }}</p>
+          </div>`
+      });
+
+      app.mount("#app4");
+    </script>
+  </section>
+
+  <!-- ============ EXERCÍCIO 5 ============ -->
+  <section class="ex" id="ex5">
+    <h2>Exercício 5 — Lista de tarefas</h2>
+    <p class="enunciado">O pai tem uma lista de pelo menos quatro tarefas (<code>id</code>, <code>texto</code>, <code>feita</code>) e exibe cada uma com <code>tarefa-item</code>. As concluídas aparecem riscadas.</p>
+    <div class="demo">
+      <div id="app5">
+        <ul class="lista">
+          <tarefa-item
+            v-for="t in tarefas"
+            :key="t.id"
+            :texto="t.texto"
+            :feita="t.feita">
+          </tarefa-item>
+        </ul>
+      </div>
+    </div>
+    <details open><summary>Código</summary><div class="codigo"></div></details>
+    <div class="notas"><ul>
+      <li>O <code>:key="t.id"</code> é obrigatório no <code>v-for</code> e deve ser um identificador estável, não o índice.</li>
+      <li>O <code>id</code> fica no pai, usado só como chave; o filho recebe apenas o que precisa mostrar.</li>
+      <li>O risco vem de uma classe CSS aplicada com <code>:class="{ feita: feita }"</code>.</li>
+    </ul></div>
+    <script type="text/plain" data-ex="5">
+      const app = Vue.createApp({
+        data() {
+          return {
+            tarefas: [
+              { id: 1, texto: "Estudar props", feita: true },
+              { id: 2, texto: "Fazer os exercícios", feita: false },
+              { id: 3, texto: "Ler sobre emits", feita: false },
+              { id: 4, texto: "Revisar o código", feita: true }
+            ]
+          };
+        }
+      });
+
+      app.component("tarefa-item", {
+        props: {
+          texto: { type: String, required: true },
+          feita: { type: Boolean, default: false }
+        },
+        template: `<li :class="{ feita: feita }">{{ texto }}</li>`
+      });
+
+      app.mount("#app5");
+    </script>
+  </section>
+
+  <!-- ============ EXERCÍCIO 6 ============ -->
+  <section class="ex" id="ex6">
+    <h2>Exercício 6 — Concluindo tarefas</h2>
+    <p class="enunciado">Ao clicar em uma tarefa, ela alterna entre feita e pendente. O filho não altera props: quem muda o dado é o pai.</p>
+    <div class="demo">
+      <div id="app6">
+        <ul class="lista">
+          <tarefa-item
+            v-for="t in tarefas"
+            :key="t.id"
+            :texto="t.texto"
+            :feita="t.feita"
+            @alternar="alternar(t.id)">
+          </tarefa-item>
+        </ul>
+      </div>
+    </div>
+    <details open><summary>Código</summary><div class="codigo"></div></details>
+    <div class="notas"><ul>
+      <li>Filho: no clique, avisa com <code>$emit("alternar")</code>. Ele não sabe o que o pai fará com o aviso.</li>
+      <li>Pai: escuta com <code>@alternar="alternar(t.id)"</code>, encontra a tarefa e inverte <code>feita</code>.</li>
+      <li>O erro clássico seria o filho fazer <code>this.feita = !this.feita</code>: o Vue avisa no console que props são somente leitura.</li>
+    </ul></div>
+    <script type="text/plain" data-ex="6">
+      const app = Vue.createApp({
+        data() {
+          return {
+            tarefas: [
+              { id: 1, texto: "Estudar props", feita: true },
+              { id: 2, texto: "Fazer os exercícios", feita: false },
+              { id: 3, texto: "Ler sobre emits", feita: false },
+              { id: 4, texto: "Revisar o código", feita: true }
+            ]
+          };
+        },
+        methods: {
+          alternar(id) {
+            const tarefa = this.tarefas.find(t => t.id === id);
+            if (tarefa) {
+              tarefa.feita = !tarefa.feita;
+            }
+          }
+        }
+      });
+
+      app.component("tarefa-item", {
+        props: {
+          texto: { type: String, required: true },
+          feita: { type: Boolean, default: false }
+        },
+        emits: ["alternar"],
+        template: `
+          <li class="clicavel" :class="{ feita: feita }" @click="$emit('alternar')">
+            {{ texto }}
+          </li>`
+      });
+
+      app.mount("#app6");
+    </script>
+  </section>
+
+  <!-- ============ EXERCÍCIO 7 ============ -->
+  <section class="ex" id="ex7">
+    <h2>Exercício 7 — Botão reutilizável</h2>
+    <p class="enunciado">Componente <code>botao-acao</code> que recebe um rótulo e avisa o pai ao ser clicado. O pai mostra a pontuação e usa o mesmo botão para "+1", "+10" e "Zerar".</p>
+    <div class="demo">
+      <div id="app7">
+        <p class="placar">Pontuação: <strong>{{ pontos }}</strong></p>
+        <div class="acoes">
+          <botao-acao rotulo="+1" @acionar="somar(1)"></botao-acao>
+          <botao-acao rotulo="+10" @acionar="somar(10)"></botao-acao>
+          <botao-acao rotulo="Zerar" @acionar="zerar"></botao-acao>
+        </div>
+      </div>
+    </div>
+    <details open><summary>Código</summary><div class="codigo"></div></details>
+    <div class="notas"><ul>
+      <li>O botão só sabe o rótulo e que precisa avisar quando for clicado. O que cada clique significa é decisão do pai.</li>
+      <li>Um componente, três comportamentos: a diferença está só no que o pai faz ao escutar <code>@acionar</code>.</li>
+    </ul></div>
+    <script type="text/plain" data-ex="7">
+      const app = Vue.createApp({
+        data() {
+          return { pontos: 0 };
+        },
+        methods: {
+          somar(valor) {
+            this.pontos += valor;
+          },
+          zerar() {
+            this.pontos = 0;
+          }
+        }
+      });
+
+      app.component("botao-acao", {
+        props: {
+          rotulo: { type: String, required: true }
+        },
+        emits: ["acionar"],
+        template: `<button class="botao" @click="$emit('acionar')">{{ rotulo }}</button>`
+      });
+
+      app.mount("#app7");
+    </script>
+  </section>
+
+  <!-- ============ EXERCÍCIO 8 ============ -->
+  <section class="ex" id="ex8">
+    <h2>Exercício 8 — Contador com limite</h2>
+    <p class="enunciado">Componente <code>contador-controle</code> com "−", o valor e "+". O valor fica no pai, que não aceita menos que 0 nem mais que 10; no limite, o botão correspondente fica desativado.</p>
+    <div class="demo">
+      <div id="app8">
+        <contador-controle
+          :valor="valor"
+          :minimo="minimo"
+          :maximo="maximo"
+          @diminuir="diminuir"
+          @aumentar="aumentar">
+        </contador-controle>
+      </div>
+    </div>
+    <details open><summary>Código</summary><div class="codigo"></div></details>
+    <div class="notas"><ul>
+      <li>O dado (<code>valor</code>) mora no pai. O filho recebe o valor e os limites por props e só pede para aumentar ou diminuir.</li>
+      <li>O <code>:disabled</code> deixa a interface coerente, mas a regra de verdade está nos métodos do pai: mesmo que alguém dispare o evento por outro caminho, o limite continua valendo.</li>
+    </ul></div>
+    <script type="text/plain" data-ex="8">
+      const app = Vue.createApp({
+        data() {
+          return { valor: 5, minimo: 0, maximo: 10 };
+        },
+        methods: {
+          diminuir() {
+            if (this.valor > this.minimo) {
+              this.valor--;
+            }
+          },
+          aumentar() {
+            if (this.valor < this.maximo) {
+              this.valor++;
+            }
+          }
+        }
+      });
+
+      app.component("contador-controle", {
+        props: {
+          valor: { type: Number, required: true },
+          minimo: { type: Number, default: 0 },
+          maximo: { type: Number, default: 10 }
+        },
+        emits: ["diminuir", "aumentar"],
+        template: `
+          <div class="contador">
+            <button class="botao" :disabled="valor <= minimo" @click="$emit('diminuir')">−</button>
+            <span class="valor">{{ valor }}</span>
+            <button class="botao" :disabled="valor >= maximo" @click="$emit('aumentar')">+</button>
+          </div>`
+      });
+
+      app.mount("#app8");
+    </script>
+  </section>
+
+  <!-- ============ EXERCÍCIO 9 ============ -->
+  <section class="ex" id="ex9">
+    <h2>Exercício 9 — Adicionando tarefas</h2>
+    <p class="enunciado">Componente <code>nova-tarefa</code> com campo de texto e botão "Adicionar". O texto vai ao pai, que inclui a tarefa na lista. O campo é limpo depois, e textos vazios são ignorados.</p>
+    <div class="demo">
+      <div id="app9">
+        <nova-tarefa @adicionar="adicionar"></nova-tarefa>
+        <ul class="lista">
+          <tarefa-item
+            v-for="t in tarefas"
+            :key="t.id"
+            :texto="t.texto"
+            :feita="t.feita"
+            @alternar="alternar(t.id)">
+          </tarefa-item>
+        </ul>
+      </div>
+    </div>
+    <details open><summary>Código</summary><div class="codigo"></div></details>
+    <div class="notas"><ul>
+      <li>O texto digitado (<code>v-model</code>) é estado <strong>do filho</strong>, porque só importa enquanto a pessoa digita. Ao clicar, ele sai pelo evento: <code>$emit("adicionar", texto)</code>.</li>
+      <li><code>trim()</code> evita tarefas feitas só de espaços; depois de enviar, <code>this.texto = ""</code> limpa o campo.</li>
+      <li>O pai cria o objeto da tarefa, com <code>id</code> próprio (<code>proximoId</code>), e dá <code>push</code> na lista.</li>
+      <li><code>@keyup.enter</code> permite adicionar também com a tecla Enter.</li>
+    </ul></div>
+    <script type="text/plain" data-ex="9">
+      const app = Vue.createApp({
+        data() {
+          return {
+            proximoId: 4,
+            tarefas: [
+              { id: 1, texto: "Estudar props", feita: true },
+              { id: 2, texto: "Fazer os exercícios", feita: false },
+              { id: 3, texto: "Ler sobre emits", feita: false }
+            ]
+          };
+        },
+        methods: {
+          adicionar(texto) {
+            this.tarefas.push({ id: this.proximoId++, texto: texto, feita: false });
+          },
+          alternar(id) {
+            const tarefa = this.tarefas.find(t => t.id === id);
+            if (tarefa) {
+              tarefa.feita = !tarefa.feita;
+            }
+          }
+        }
+      });
+
+      app.component("tarefa-item", {
+        props: {
+          texto: { type: String, required: true },
+          feita: { type: Boolean, default: false }
+        },
+        emits: ["alternar"],
+        template: `
+          <li class="clicavel" :class="{ feita: feita }" @click="$emit('alternar')">
+            {{ texto }}
+          </li>`
+      });
+
+      app.component("nova-tarefa", {
+        emits: ["adicionar"],
+        data() {
+          return { texto: "" };
+        },
+        methods: {
+          enviar() {
+            const limpo = this.texto.trim();
+            if (limpo === "") {
+              return;
+            }
+            this.$emit("adicionar", limpo);
+            this.texto = "";
+          }
+        },
+        template: `
+          <div class="nova">
+            <input v-model="texto" @keyup.enter="enviar" placeholder="Nova tarefa">
+            <button class="botao" @click="enviar">Adicionar</button>
+          </div>`
+      });
+
+      app.mount("#app9");
+    </script>
+  </section>
+
+  <!-- ============ EXERCÍCIO 10 ============ -->
+  <section class="ex" id="ex10">
+    <h2>Exercício 10 — Desafio: mini app de tarefas</h2>
+    <p class="enunciado">Aplicação completa com <code>nova-tarefa</code>, <code>tarefa-item</code> (concluir e remover) e <code>resumo-tarefas</code> ("X de Y tarefas concluídas"). Só o pai guarda a lista, todas as props têm validação, todo evento é declarado em <code>emits</code>, o total de concluídas vem de <code>computed</code> e o console fica sem avisos.</p>
+    <div class="demo">
+      <div id="app10">
+        <nova-tarefa @adicionar="adicionar"></nova-tarefa>
+
+        <ul class="lista" v-if="tarefas.length">
+          <tarefa-item
+            v-for="t in tarefas"
+            :key="t.id"
+            :texto="t.texto"
+            :feita="t.feita"
+            @alternar="alternar(t.id)"
+            @remover="remover(t.id)">
+          </tarefa-item>
+        </ul>
+        <p class="vazio" v-else>Nenhuma tarefa ainda. Digite acima e clique em Adicionar.</p>
+
+        <resumo-tarefas :concluidas="concluidas" :total="tarefas.length"></resumo-tarefas>
+      </div>
+    </div>
+    <details open><summary>Código</summary><div class="codigo"></div></details>
+
+    <div class="notas">
+      <p><strong>Árvore de componentes:</strong></p>
+<pre>App (componente pai)
+  dados:    tarefas, proximoId
+  computed: concluidas
+  │
+  ├── nova-tarefa
+  │     ↑ emits:  adicionar(texto)
+  │
+  ├── tarefa-item   (um para cada tarefa, com v-for)
+  │     ↓ props:  texto, feita
+  │     ↑ emits:  alternar, remover
+  │
+  └── resumo-tarefas
+        ↓ props:  concluidas, total</pre>
+      <p style="margin-top:.75rem"><strong>Resumo do fluxo:</strong></p>
+      <table>
+        <tr><th>Componente</th><th>Recebe do pai (props)</th><th>Avisa o pai (emits)</th><th>O pai faz</th></tr>
+        <tr><td><code>nova-tarefa</code></td><td>nada</td><td><code>adicionar(texto)</code></td><td><code>push</code> de uma nova tarefa em <code>tarefas</code></td></tr>
+        <tr><td><code>tarefa-item</code></td><td><code>texto</code>, <code>feita</code></td><td><code>alternar</code>, <code>remover</code></td><td>inverte <code>feita</code> ou filtra a tarefa para fora da lista</td></tr>
+        <tr><td><code>resumo-tarefas</code></td><td><code>concluidas</code>, <code>total</code></td><td>nenhum</td><td>só entrega os números</td></tr>
+      </table>
+      <ul>
+        <li><code>concluidas</code> é uma <code>computed</code>: se recalcula sozinha sempre que uma tarefa muda ou é removida, sem precisar de um contador paralelo para manter em dia.</li>
+        <li>Checkbox do filho usa <code>:checked="feita"</code> (só leitura) e <code>@change</code> para avisar. Não há <code>v-model</code> em prop, que seria uma alteração de prop disfarçada.</li>
+        <li><code>resumo-tarefas</code> não tem <code>emits</code> porque não dispara nenhum evento.</li>
+      </ul>
+    </div>
+
+    <script type="text/plain" data-ex="10">
+      const app = Vue.createApp({
+        data() {
+          return {
+            proximoId: 4,
+            tarefas: [
+              { id: 1, texto: "Estudar props", feita: true },
+              { id: 2, texto: "Fazer os exercícios", feita: false },
+              { id: 3, texto: "Ler sobre emits", feita: false }
+            ]
+          };
+        },
+        computed: {
+          concluidas() {
+            return this.tarefas.filter(t => t.feita).length;
+          }
+        },
+        methods: {
+          adicionar(texto) {
+            this.tarefas.push({ id: this.proximoId++, texto: texto, feita: false });
+          },
+          alternar(id) {
+            const tarefa = this.tarefas.find(t => t.id === id);
+            if (tarefa) {
+              tarefa.feita = !tarefa.feita;
+            }
+          },
+          remover(id) {
+            this.tarefas = this.tarefas.filter(t => t.id !== id);
+          }
+        }
+      });
+
+      app.component("nova-tarefa", {
+        emits: ["adicionar"],
+        data() {
+          return { texto: "" };
+        },
+        methods: {
+          enviar() {
+            const limpo = this.texto.trim();
+            if (limpo === "") {
+              return;
+            }
+            this.$emit("adicionar", limpo);
+            this.texto = "";
+          }
+        },
+        template: `
+          <div class="nova">
+            <input v-model="texto" @keyup.enter="enviar" placeholder="Nova tarefa">
+            <button class="botao" @click="enviar">Adicionar</button>
+          </div>`
+      });
+
+      app.component("tarefa-item", {
+        props: {
+          texto: { type: String, required: true },
+          feita: { type: Boolean, default: false }
+        },
+        emits: ["alternar", "remover"],
+        template: `
+          <li class="item">
+            <label :class="{ feita: feita }">
+              <input type="checkbox" :checked="feita" @change="$emit('alternar')">
+              {{ texto }}
+            </label>
+            <button class="remover" @click="$emit('remover')">Remover</button>
+          </li>`
+      });
+
+      app.component("resumo-tarefas", {
+        props: {
+          concluidas: { type: Number, required: true },
+          total: { type: Number, required: true }
+        },
+        template: `<p class="resumo">{{ concluidas }} de {{ total }} tarefas concluídas</p>`
+      });
+
+      app.mount("#app10");
+    </script>
+  </section>
+
+</main>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+  // Remove o recuo comum e linhas em branco nas pontas, para exibir o código alinhado
+  function dedent(texto) {
+    const linhas = texto.replace(/\t/g, "  ").split("\n");
+    while (linhas.length && !linhas[0].trim()) linhas.shift();
+    while (linhas.length && !linhas[linhas.length - 1].trim()) linhas.pop();
+    const recuos = linhas.filter(l => l.trim()).map(l => l.match(/^ */)[0].length);
+    const recuo = recuos.length ? Math.min(...recuos) : 0;
+    return linhas.map(l => l.slice(recuo)).join("\n");
+  }
+
+  function blocoCodigo(rotulo, conteudo) {
+    const titulo = document.createElement("div");
+    titulo.className = "rotulo-codigo";
+    titulo.textContent = rotulo;
+    const pre = document.createElement("pre");
+    const code = document.createElement("code");
+    code.textContent = conteudo;
+    pre.appendChild(code);
+    return [titulo, pre];
+  }
+
+  // Para cada exercício: mostra o HTML e o JS e depois executa o mesmo JS
+  document.querySelectorAll("script[data-ex]").forEach(function (script) {
+    const n = script.dataset.ex;
+    const alvo = document.getElementById("app" + n);
+    const secao = script.closest("section");
+
+    const htmlInterno = dedent(alvo.innerHTML)
+      .split("\n").map(l => "  " + l).join("\n");
+    const html = '<div id="app' + n + '">\n' + htmlInterno + "\n</div>";
+    const js = dedent(script.textContent);
+
+    const area = secao.querySelector(".codigo");
+    blocoCodigo("index.html (dentro do <body>)", html).forEach(el => area.appendChild(el));
+    blocoCodigo("app.js", js).forEach(el => area.appendChild(el));
+
+    try {
+      new Function("Vue", js)(Vue);
+    } catch (erro) {
+      console.error("Erro no exercício " + n + ":", erro);
+    }
+  });
+</script>
+</body>
+</html>
