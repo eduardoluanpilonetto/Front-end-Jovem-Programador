@@ -1,0 +1,7 @@
+Exercício 6 — Investigando a navegação
+A URL muda para /tarefas sem recarregar a página.
+O botão Voltar retorna às telas anteriores (Tarefas e depois Início), pois cada rota entra no histórico do navegador.
+Na aba Network não aparece um novo documento HTML: a página não é recarregada, só o componente da tela troca.
+Sim, funciona. Abrir /sobre direto carrega o app e o router mostra a tela Sobre (o servidor do Vite devolve o index.html para qualquer rota).
+Com v-if, a URL não mudaria (sem links compartilháveis nem endereço para favoritar), o botão Voltar não navegaria entre telas, e abrir uma tela específica direto pela URL não seria possível. Além disso, todo o controle de qual tela mostrar ficaria à mão em variáveis, que crescem a cada nova tela.
+Vantagens esperadas: URL própria para cada tela, histórico/Voltar funcionando, navegação sem recarregar.
