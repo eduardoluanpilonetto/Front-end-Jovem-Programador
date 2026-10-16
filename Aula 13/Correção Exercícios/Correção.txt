@@ -1,0 +1,24 @@
+1. Verdadeiro ou falso
+a) Falso. No CDN é preciso recarregar a página manualmente. O hot reload é do Vite.
+b) Verdadeiro. npm install baixa as dependências listadas no package.json, incluindo o Vue.
+c) Falso. As três seções são opcionais. Quase todo componente tem <template> e <script>, mas o <style> só entra se precisar.
+d) Falso. No created() os dados existem, mas a tela ainda não foi desenhada. O DOM só fica disponível no mounted().
+2. Estrutura do projeto
+index.html: página única do projeto. Só tem uma div vazia (#app); quem desenha o conteúdo é o Vue.
+main.js: cria a aplicação (createApp) e a monta na div do index.html. É o novo lugar do createApp.
+App.vue: componente raiz, equivalente ao antigo <div id="app">. Os outros componentes são usados dentro dele.
+components/: pasta dos componentes filhos, um arquivo .vue por componente.
+Critério: aceitar respostas com outras palavras, desde que cada arquivo tenha o papel certo.
+
+3. created ou mounted?
+a) created(). Só prepara um dado, não precisa da tela.
+b) mounted(). Medir um elemento exige que ele já exista no DOM.
+c) mounted(). A biblioteca precisa encontrar a div na tela.
+d) created(). Buscar dados iniciais não depende do DOM, então dá para começar o quanto antes.
+Regra: só preparar dados → created(); tocar em algo da tela → mounted().
+
+4. watch ou computed?
+a) computed. Calcula um valor (nome completo) a partir de outros dados, para exibir.
+b) watch. É uma ação (log) disparada quando email muda.
+c) computed. Valor derivado da lista de tarefas, exibido na tela.
+d) watch. Salvar é um efeito colateral executado a cada alteração. Para listas (array/objeto), o ideal seria deep: true (ver observação no final).
